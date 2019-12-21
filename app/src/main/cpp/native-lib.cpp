@@ -7,7 +7,7 @@ using namespace cv;
 using namespace std;
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_plbear_imagedemo_MainActivity_stringFromJNI(
+Java_com_plbear_imagedemo_jinterface_CvInterface_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
     std::string hello = "Hello from C++";
@@ -15,7 +15,7 @@ Java_com_plbear_imagedemo_MainActivity_stringFromJNI(
 }
 
 extern "C" JNIEXPORT jintArray JNICALL
-Java_com_dhcc_www_ndkapplication_MainActivity_Bitmap2Grey(
+Java_com_plbear_imagedemo_jinterface_CvInterface_bitmap2Grey(
         JNIEnv *env,
         jobject /* this */, jintArray buf, jint w, jint h) {
     jint *cbuf;
