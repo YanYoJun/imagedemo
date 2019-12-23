@@ -16,7 +16,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-//                cppFlags "-std=c++11"
+//                我们配置cmake命令
                 cppFlags "-std=c++11 -frtti -fexceptions"
                 abiFilters 'armeabi-v7a'
                 arguments "-DANDROID_STL=c++_shared"
@@ -28,6 +28,7 @@ android {
     }
     sourceSets {
         main {
+            //配置我们自己的libs库目录
             jniLibs.srcDirs = ['src/main/jniLibs/libs']
         }
     }
@@ -36,17 +37,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             ndk {
+                //设置为arm32的, 其他的架构往后面加文件就可以
                 abiFilters 'armeabi-v7a'
             }
         }
-//        debug {
-//            ndk {
-//                abiFilters 'armeabi-v7a'
-//            }
-//        }
     }
     externalNativeBuild {
         cmake {
+            // 设置编译文件
             path "CMakeLists.txt"
             version "3.10.2"
         }

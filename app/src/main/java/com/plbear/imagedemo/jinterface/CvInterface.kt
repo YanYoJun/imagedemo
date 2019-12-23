@@ -13,4 +13,6 @@ class CvInterface {
 
     external fun stringFromJNI(): String
     external fun bitmap2Grey(pixels: IntArray, w: Int, h: Int): IntArray
+    external fun bitmap2GreyV2(pixels: IntArray, w: Int, h: Int): IntArray
+    external fun bitmap2GreyV3(pixels: IntArray, w: Int, h: Int): IntArray
 }

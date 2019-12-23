@@ -31,12 +31,41 @@ class GrayActivity : BaseActivity() {
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.to_gray)
         mBinding.ivSource.setImageBitmap(bitmap)
         mBinding.ivTarget.setImageBitmap(gray(bitmap))
+        mBinding.ivTargetV2.setImageBitmap(grayV2(bitmap))
+        mBinding.ivTargetV3.setImageBitmap(grayV3(bitmap))
     }
 
+    /**
+     * cvColor 通道模式转换
+     */
     private fun gray(bitmap: Bitmap): Bitmap {
         val piexl = IntArray(bitmap.width * bitmap.height)
         bitmap.getPixels(piexl, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
         val targetData = mCv.bitmap2Grey(piexl, bitmap.width, bitmap.height)
+        val targetBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+        targetBitmap.setPixels(targetData, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+        return targetBitmap
+    }
+
+    /**
+     * 均值灰度
+     */
+    private fun grayV2(bitmap: Bitmap): Bitmap {
+        val piexl = IntArray(bitmap.width * bitmap.height)
+        bitmap.getPixels(piexl, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+        val targetData = mCv.bitmap2GreyV2(piexl, bitmap.width, bitmap.height)
+        val targetBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+        targetBitmap.setPixels(targetData, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+        return targetBitmap
+    }
+
+    /**
+     * 灰度自实现
+     */
+    private fun grayV3(bitmap: Bitmap): Bitmap {
+        val piexl = IntArray(bitmap.width * bitmap.height)
+        bitmap.getPixels(piexl, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+        val targetData = mCv.bitmap2GreyV3(piexl, bitmap.width, bitmap.height)
         val targetBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
         targetBitmap.setPixels(targetData, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
         return targetBitmap
