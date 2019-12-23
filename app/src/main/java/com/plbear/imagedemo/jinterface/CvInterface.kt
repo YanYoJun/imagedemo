@@ -15,4 +15,11 @@ class CvInterface {
     external fun bitmap2Grey(pixels: IntArray, w: Int, h: Int): IntArray
     external fun bitmap2GreyV2(pixels: IntArray, w: Int, h: Int): IntArray
     external fun bitmap2GreyV3(pixels: IntArray, w: Int, h: Int): IntArray
+    external fun binarization(pixels: IntArray, w: Int, h: Int, threshold: Int): IntArray
+    external fun reverse(pixels: IntArray, w: Int, h: Int): IntArray
+    external fun red(pixels: IntArray, w: Int, h: Int): IntArray
+    external fun old(pixels: IntArray, w: Int, h: Int): IntArray
+    external fun zhurong(pixels: IntArray, w: Int, h: Int): IntArray
+    external fun freeze(pixels: IntArray, w: Int, h: Int): IntArray
+    external fun child(pixels: IntArray, w: Int, h: Int): IntArray
 }

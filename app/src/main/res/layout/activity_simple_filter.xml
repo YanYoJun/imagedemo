@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="原图" />
+
+            <ImageView
+                android:id="@+id/iv_source"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="二值化" />
+
+            <ImageView
+                android:id="@+id/iv_target_v1"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="反向滤镜" />
+
+            <ImageView
+                android:id="@+id/iv_reverse"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="红色滤镜" />
+
+            <ImageView
+                android:id="@+id/iv_red"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="怀旧" />
+
+            <ImageView
+                android:id="@+id/iv_old"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="铸熔" />
+
+            <ImageView
+                android:id="@+id/iv_zhurong"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="冰冻" />
+
+            <ImageView
+                android:id="@+id/iv_freeze"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="连环画" />
+
+            <ImageView
+                android:id="@+id/iv_child"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</layout>

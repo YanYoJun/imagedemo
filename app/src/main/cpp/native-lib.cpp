@@ -3,6 +3,7 @@
 #include <opencv2/opencv.hpp>
 #include <ostream>
 #include <android/log.h>
+#include <math.h>
 
 #define LOG_TAG    "imlog"
 #define LOGD(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
@@ -110,3 +111,249 @@ Java_com_plbear_imagedemo_jinterface_CvInterface_bitmap2GreyV3(
     return result;
 }
 
+//external fun binarization(pixels: IntArray, w: Int, h: Int, threshold: Int): IntArray
+extern "C" JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_binarization(
+        JNIEnv *env,
+        jobject, jintArray buf, jint w, jint h, jint threshold) {
+    jint *cbuf;
+    jboolean ptfalse = false;
+    cbuf = env->GetIntArrayElements(buf, &ptfalse);
+    if (cbuf == NULL) {
+        return 0;
+    }
+    Mat imgData(h, w, CV_8UC4, (unsigned char *) cbuf);
+    int nr = imgData.rows;
+    int channel = imgData.channels();
+    int nc = imgData.cols;
+    for (int i = 0; i < nr; ++i) {
+        auto rowData = imgData.ptr<unsigned char>(i);
+        for (int j = 0; j < nc; j++) {
+            unsigned char *curData = rowData + (j * channel);
+            auto blue = curData[0];
+            auto green = curData[1];
+            auto red = curData[2];
+            auto gray = (unsigned char) (blue * 0.11 + green * 0.59 + red * 0.3);
+            if (gray > threshold) {
+                curData[0] = curData[1] = curData[2] = 255;
+            } else {
+                curData[0] = curData[1] = curData[2] = 0;
+            }
+        }
+    }
+    int size = w * h;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
+    env->ReleaseIntArrayElements(buf, cbuf, 0);
+    return result;
+}
+
+//反向滤镜
+extern "C" JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_reverse(
+        JNIEnv *env,
+        jobject, jintArray buf, jint w, jint h) {
+    jint *cbuf;
+    jboolean ptfalse = false;
+    cbuf = env->GetIntArrayElements(buf, &ptfalse);
+    if (cbuf == NULL) {
+        return 0;
+    }
+    Mat imgData(h, w, CV_8UC4, (unsigned char *) cbuf);
+    int nr = imgData.rows;
+    int channel = imgData.channels();
+    int nc = imgData.cols;
+    for (int i = 0; i < nr; i++) {
+        auto rowData = imgData.ptr<unsigned char>(i);
+        for (int j = 0; j < nc; j++) {
+            unsigned char *curData = rowData + (j * channel);
+            curData[0] = (unsigned char) (255 - curData[0]);
+            curData[1] = (unsigned char) (255 - curData[1]);
+            curData[2] = (unsigned char) (255 - curData[2]);
+        }
+    }
+    int size = w * h;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
+    env->ReleaseIntArrayElements(buf, cbuf, 0);
+    return result;
+}
+
+//单色
+extern "C" JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_red(
+        JNIEnv *env,
+        jobject, jintArray buf, jint w, jint h) {
+    jint *cbuf;
+    jboolean ptfalse = false;
+    cbuf = env->GetIntArrayElements(buf, &ptfalse);
+    if (cbuf == NULL) {
+        return 0;
+    }
+    Mat imgData(h, w, CV_8UC4, (unsigned char *) cbuf);
+    int nr = imgData.rows;
+    int channel = imgData.channels();
+    int nc = imgData.cols;
+    for (int i = 0; i < nr; i++) {
+        auto rowData = imgData.ptr<unsigned char>(i);
+        for (int j = 0; j < nc; j++) {
+            unsigned char *curData = rowData + (j * channel);
+            curData[0] = 0;
+            curData[1] = 0;
+        }
+    }
+    int size = w * h;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
+    env->ReleaseIntArrayElements(buf, cbuf, 0);
+    return result;
+}
+
+//单色
+extern "C" JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_old(
+        JNIEnv *env,
+        jobject, jintArray buf, jint w, jint h) {
+    jint *cbuf;
+    jboolean ptfalse = false;
+    cbuf = env->GetIntArrayElements(buf, &ptfalse);
+    if (cbuf == NULL) {
+        return 0;
+    }
+    Mat imgData(h, w, CV_8UC4, (unsigned char *) cbuf);
+    int nr = imgData.rows;
+    int channel = imgData.channels();
+    int nc = imgData.cols;
+    for (int i = 0; i < nr; i++) {
+        auto rowData = imgData.ptr<unsigned char>(i);
+        for (int j = 0; j < nc; j++) {
+            unsigned char *curData = rowData + (j * channel);
+            auto blue = curData[0];
+            auto green = curData[1];
+            auto red = curData[2];
+            auto DBlue = (0.272 * red + 0.534 * green + 0.131 * blue);
+            auto DGreen = (0.349 * red + 0.686 * green + 0.168 * blue);
+            auto DRed = (0.393 * red + 0.769 * green + 0.189 * blue);
+            curData[0] = (unsigned char) (DBlue > 255 ? 255 : DBlue);
+            curData[1] = (unsigned char) (DGreen > 255 ? 255 : DGreen);
+            curData[2] = (unsigned char) (DRed > 255 ? 255 : DRed);
+        }
+    }
+    int size = w * h;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
+    env->ReleaseIntArrayElements(buf, cbuf, 0);
+    return result;
+}
+
+
+//铸熔滤镜
+extern "C" JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_zhurong(
+        JNIEnv *env,
+        jobject, jintArray buf, jint w, jint h) {
+    jint *cbuf;
+    jboolean ptfalse = false;
+    cbuf = env->GetIntArrayElements(buf, &ptfalse);
+    if (cbuf == NULL) {
+        return 0;
+    }
+    Mat imgData(h, w, CV_8UC4, (unsigned char *) cbuf);
+    int nr = imgData.rows;
+    int channel = imgData.channels();
+    int nc = imgData.cols;
+    for (int i = 0; i < nr; i++) {
+        auto rowData = imgData.ptr<unsigned char>(i);
+        for (int j = 0; j < nc; j++) {
+            unsigned char *curData = rowData + (j * channel);
+            auto blue = curData[0];
+            auto green = curData[1];
+            auto red = curData[2];
+            auto DBlue = 128.0 * blue / (green + red + 1);
+            auto DGreen = 128.0 * green / (red + blue + 1);
+            auto DRed = 128.0 * red / (green + blue + 1);
+            curData[0] = (unsigned char) (DBlue > 255 ? 255 : DBlue);
+            curData[1] = (unsigned char) (DGreen > 255 ? 255 : DGreen);
+            curData[2] = (unsigned char) (DRed > 255 ? 255 : DRed);
+        }
+    }
+    int size = w * h;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
+    env->ReleaseIntArrayElements(buf, cbuf, 0);
+    return result;
+}
+
+//冰冻滤镜
+extern "C" JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_freeze(
+        JNIEnv *env,
+        jobject, jintArray buf, jint w, jint h) {
+    jint *cbuf;
+    jboolean ptfalse = false;
+    cbuf = env->GetIntArrayElements(buf, &ptfalse);
+    if (cbuf == NULL) {
+        return 0;
+    }
+    Mat imgData(h, w, CV_8UC4, (unsigned char *) cbuf);
+    int nr = imgData.rows;
+    int channel = imgData.channels();
+    int nc = imgData.cols;
+    for (int i = 0; i < nr; i++) {
+        auto rowData = imgData.ptr<unsigned char>(i);
+        for (int j = 0; j < nc; j++) {
+            unsigned char *curData = rowData + (j * channel);
+            auto blue = curData[0];
+            auto green = curData[1];
+            auto red = curData[2];
+            auto DBlue = 3.0 * (blue - red - green) / 2;
+            auto DGreen = 3.0 * (green - blue - red) / 2;
+            auto DRed = 3.0 * (red - blue - green) / 2;
+            curData[0] = (unsigned char) (DBlue > 255 ? 255 : (DBlue < 0 ? 0 : DBlue));
+            curData[1] = (unsigned char) (DGreen > 255 ? 255 : (DGreen < 0 ? 0 : DGreen));
+            curData[2] = (unsigned char) (DRed > 255 ? 255 : (DRed < 0 ? 0 : DRed));
+        }
+    }
+    int size = w * h;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
+    env->ReleaseIntArrayElements(buf, cbuf, 0);
+    return result;
+}
+
+//连环画滤镜
+extern "C" JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_child(
+        JNIEnv *env,
+        jobject, jintArray buf, jint w, jint h) {
+    jint *cbuf;
+    jboolean ptfalse = false;
+    cbuf = env->GetIntArrayElements(buf, &ptfalse);
+    if (cbuf == NULL) {
+        return 0;
+    }
+    Mat imgData(h, w, CV_8UC4, (unsigned char *) cbuf);
+    int nr = imgData.rows;
+    int channel = imgData.channels();
+    int nc = imgData.cols;
+    for (int i = 0; i < nr; i++) {
+        auto rowData = imgData.ptr<unsigned char>(i);
+        for (int j = 0; j < nc; j++) {
+            unsigned char *curData = rowData + (j * channel);
+            auto blue = curData[0];
+            auto green = curData[1];
+            auto red = curData[2];
+            auto DBlue = abs(1.0 * blue - green + blue + red) * green / 256;
+            auto DGreen = abs(1.0 * blue - green + blue + red) * red / 256;
+            auto DRed = abs(1.0 * green - blue + green + red) * red / 256;
+            curData[0] = (unsigned char) DBlue;
+            curData[1] = (unsigned char) DGreen;
+            curData[2] = (unsigned char) DRed;
+        }
+    }
+    int size = w * h;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
+    env->ReleaseIntArrayElements(buf, cbuf, 0);
+    return result;
+}
