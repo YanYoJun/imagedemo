@@ -22,4 +22,6 @@ class CvInterface {
     external fun zhurong(pixels: IntArray, w: Int, h: Int): IntArray
     external fun freeze(pixels: IntArray, w: Int, h: Int): IntArray
     external fun child(pixels: IntArray, w: Int, h: Int): IntArray
+    external fun boxFilter(pixels: IntArray, w: Int, h: Int): IntArray
+    external fun blurFilter(pixels: IntArray, w: Int, h: Int):IntArray
 }

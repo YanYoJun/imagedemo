@@ -18,7 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".gray.GrayActivity" />
-        <activity android:name=".filter.SimpleFilterActivity"/>
+        <activity android:name=".filter.SimpleFilterActivity" />
+        <activity android:name=".filter.FilterActivity" />
     </application>
 
 </manifest>

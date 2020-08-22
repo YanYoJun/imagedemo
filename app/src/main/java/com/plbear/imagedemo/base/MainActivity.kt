@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.plbear.imagedemo.R
 import com.plbear.imagedemo.databinding.ActivityMainBinding
+import com.plbear.imagedemo.filter.FilterActivity
 import com.plbear.imagedemo.filter.SimpleFilterActivity
 import com.plbear.imagedemo.gray.GrayActivity
 
@@ -18,6 +19,9 @@ class MainActivity : BaseActivity() {
         }
         mBinding.btnSimpleFilter.setOnClickListener {
             SimpleFilterActivity.start(this)
+        }
+        mBinding.btnFilter.setOnClickListener {
+            FilterActivity.start(this)
         }
     }
 }
