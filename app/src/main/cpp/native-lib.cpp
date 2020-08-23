@@ -27,7 +27,7 @@ Java_com_plbear_imagedemo_jinterface_CvInterface_bitmap2Grey(
     jint *cbuf;
     jboolean ptfalse = false;
     cbuf = env->GetIntArrayElements(buf, &ptfalse);
-    if (cbuf == NULL) { 
+    if (cbuf == NULL) {
         return 0;
     }
 

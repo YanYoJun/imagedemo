@@ -11,6 +11,10 @@ import com.plbear.imagedemo.base.BaseActivity
 import com.plbear.imagedemo.databinding.ActivityFilterBinding
 import com.plbear.imagedemo.jinterface.CvInterface
 import com.plbear.imagedemo.utils.logcat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * created by yanyongjun on 2020/8/22
@@ -30,21 +34,23 @@ class FilterActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_filter)
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.to_gray)
-        binding.ivSource.setImageBitmap(bitmap)
-        binding.ivBox.setImageBitmap(boxFilter(bitmap))
-        binding.ivBlur.setImageBitmap(blurFilter(bitmap))
-        binding.ivGaussian.setImageBitmap(gaFilter(bitmap))
-        binding.ivMid.setImageBitmap(midFilter(bitmap))
-        binding.ivBil.setImageBitmap(bilFilter(bitmap))
+        GlobalScope.launch(Dispatchers.Main) {
+            binding.ivSource.setImageBitmap(bitmap)
+            binding.ivBox.setImageBitmap(boxFilter(bitmap))
+            binding.ivBlur.setImageBitmap(blurFilter(bitmap))
+            binding.ivGaussian.setImageBitmap(gaFilter(bitmap))
+            binding.ivMid.setImageBitmap(midFilter(bitmap))
+            binding.ivBil.setImageBitmap(bilFilter(bitmap))
+        }
     }
 
-    private fun boxFilter(bitmap: Bitmap): Bitmap {
+    private suspend fun boxFilter(bitmap: Bitmap): Bitmap = withContext(Dispatchers.Default) {
         val pixel = IntArray(bitmap.width * bitmap.height)
         bitmap.getPixels(pixel, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
         val targetData = mCv.boxFilter(pixel, bitmap.width, bitmap.height)
         val targetBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
         targetBitmap.setPixels(targetData, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
-        return targetBitmap
+        return@withContext targetBitmap
     }
 
     private fun blurFilter(bitmap: Bitmap): Bitmap {
@@ -56,7 +62,7 @@ class FilterActivity : BaseActivity() {
         return targetBitmap
     }
 
-    private fun gaFilter(bitmap: Bitmap): Bitmap {
+    private suspend fun gaFilter(bitmap: Bitmap): Bitmap = withContext(Dispatchers.Default) {
         logcat("gaFilter")
         val pixel = IntArray(bitmap.width * bitmap.height)
         bitmap.getPixels(pixel, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
@@ -66,24 +72,24 @@ class FilterActivity : BaseActivity() {
         val targetBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
         targetBitmap.setPixels(targetData, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
         logcat("gaFilter end")
-        return targetBitmap
+        return@withContext targetBitmap
     }
 
-    private fun midFilter(bitmap: Bitmap): Bitmap {
+    private suspend fun midFilter(bitmap: Bitmap): Bitmap = withContext(Dispatchers.Default) {
         val pixel = IntArray(bitmap.height * bitmap.width)
         bitmap.getPixels(pixel, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
         val targetData = mCv.midBlur(pixel, bitmap.width, bitmap.height)
         val targetBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
         targetBitmap.setPixels(targetData, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
-        return targetBitmap
+        return@withContext targetBitmap
     }
 
-    private fun bilFilter(bitmap: Bitmap): Bitmap {
+    private suspend fun bilFilter(bitmap: Bitmap): Bitmap = withContext(Dispatchers.Default) {
         val pixel = IntArray(bitmap.height * bitmap.width)
         bitmap.getPixels(pixel, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
         val targetData = mCv.bilBlur(pixel, bitmap.width, bitmap.height)
         val targetBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
         targetBitmap.setPixels(targetData, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
-        return targetBitmap
+        return@withContext targetBitmap
     }
 }
