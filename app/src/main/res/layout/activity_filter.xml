@@ -42,6 +42,39 @@
                 android:id="@+id/iv_blur"
                 android:layout_width="300dp"
                 android:layout_height="200dp" />
+
+            <TextView
+                android:id="@+id/tv_gaussian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="高斯滤波" />
+
+            <ImageView
+                android:id="@+id/iv_gaussian"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+
+            <TextView
+                android:id="@+id/tv_mid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="中值滤波" />
+
+            <ImageView
+                android:id="@+id/iv_mid"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+
+            <TextView
+                android:id="@+id/tv_bil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="双边滤波" />
+
+            <ImageView
+                android:id="@+id/iv_bil"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
         </LinearLayout>
     </ScrollView>
 </layout>

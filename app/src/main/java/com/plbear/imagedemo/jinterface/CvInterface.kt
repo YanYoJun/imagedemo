@@ -23,5 +23,8 @@ class CvInterface {
     external fun freeze(pixels: IntArray, w: Int, h: Int): IntArray
     external fun child(pixels: IntArray, w: Int, h: Int): IntArray
     external fun boxFilter(pixels: IntArray, w: Int, h: Int): IntArray
-    external fun blurFilter(pixels: IntArray, w: Int, h: Int):IntArray
+    external fun blurFilter(pixels: IntArray, w: Int, h: Int): IntArray
+    external fun gaussianBlur(pixels: IntArray, width: Int, height: Int): IntArray
+    external fun midBlur(pixels: IntArray, width: Int, height: Int): IntArray
+    external fun bilBlur(pixels: IntArray, width: Int, height: Int): IntArray
 }

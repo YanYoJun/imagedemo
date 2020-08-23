@@ -27,7 +27,7 @@ Java_com_plbear_imagedemo_jinterface_CvInterface_bitmap2Grey(
     jint *cbuf;
     jboolean ptfalse = false;
     cbuf = env->GetIntArrayElements(buf, &ptfalse);
-    if (cbuf == NULL) {
+    if (cbuf == NULL) { 
         return 0;
     }
 
@@ -394,5 +394,61 @@ Java_com_plbear_imagedemo_jinterface_CvInterface_blurFilter(JNIEnv *env, jobject
     //这一部分其实作用不大, 因为下面的代码已经完成的pixels的数据改变, 所以其实没有必要拿一个新数组返回结果
     env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
     env->ReleaseIntArrayElements(pixels, cbuf, 0);
+    return result;
+}
+
+//高斯滤波
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_gaussianBlur(JNIEnv *env, jobject thiz,
+                                                              jintArray pixels, jint width,
+                                                              jint height) {
+    jboolean isCopy = JNI_FALSE;
+    jint *buf = env->GetIntArrayElements(pixels, &isCopy);
+    if (buf == NULL) return 0;
+    Mat imgData(height, width, CV_8UC4, (unsigned char *) buf);
+    GaussianBlur(imgData, imgData, Size(31, 31), 0);
+//    blur(imgData, imgData, Size(30, 30));
+    int size = width * height;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
+    env->ReleaseIntArrayElements(pixels, buf, 0);
+    return result;
+}
+
+//中值滤波
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_midBlur(JNIEnv *env, jobject thiz,
+                                                         jintArray pixels, jint width,
+                                                         jint height) {
+    jboolean isCopy = JNI_FALSE;
+    jint *buf = env->GetIntArrayElements(pixels, &isCopy);
+    if (buf == NULL) return 0;
+    Mat imgData(height, width, CV_8UC4, buf);
+    medianBlur(imgData, imgData, 31);
+//    blur(imgData, imgData, Size(30, 30));
+    int size = width * height;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
+    env->ReleaseIntArrayElements(pixels, buf, 0);
+    return result;
+}
+
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_bilBlur(JNIEnv *env, jobject thiz,
+                                                         jintArray pixels, jint width,
+                                                         jint height) {
+    jboolean isCopy = JNI_FALSE;
+    jint *buf = env->GetIntArrayElements(pixels, &isCopy);
+    if (buf == NULL) return 0;
+    Mat imgData(height, width, CV_8UC3, buf);
+    Mat outData(height, width,CV_8UC4);
+    bilateralFilter(imgData, outData, 10, 10 * 2, 10 / 2);
+    int size = width * height;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) outData.data);
+    env->ReleaseIntArrayElements(pixels, buf, 0);
     return result;
 }
