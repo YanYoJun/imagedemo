@@ -7,6 +7,7 @@ import com.plbear.imagedemo.databinding.ActivityMainBinding
 import com.plbear.imagedemo.filter.FilterActivity
 import com.plbear.imagedemo.filter.SimpleFilterActivity
 import com.plbear.imagedemo.gray.GrayActivity
+import com.plbear.imagedemo.gray.LightActivity
 
 class MainActivity : BaseActivity() {
     private lateinit var mBinding: ActivityMainBinding
@@ -22,6 +23,9 @@ class MainActivity : BaseActivity() {
         }
         mBinding.btnFilter.setOnClickListener {
             FilterActivity.start(this)
+        }
+        mBinding.btnLight.setOnClickListener {
+            LightActivity.start(this)
         }
     }
 }

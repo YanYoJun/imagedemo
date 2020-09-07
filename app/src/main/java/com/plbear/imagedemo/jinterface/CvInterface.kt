@@ -27,4 +27,5 @@ class CvInterface {
     external fun gaussianBlur(pixels: IntArray, width: Int, height: Int): IntArray
     external fun midBlur(pixels: IntArray, width: Int, height: Int): IntArray
     external fun bilBlur(pixels: IntArray, width: Int, height: Int): IntArray
+    external fun light(pixels: IntArray, width: Int, height: Int, light: Int,ratio:Float): IntArray
 }

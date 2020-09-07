@@ -33,5 +33,13 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_simple_filter" />
 
+        <Button
+            android:id="@+id/btn_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="明度饱和度对比度"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_filter" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

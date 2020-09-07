@@ -20,6 +20,7 @@
         <activity android:name=".gray.GrayActivity" />
         <activity android:name=".filter.SimpleFilterActivity" />
         <activity android:name=".filter.FilterActivity" />
+        <activity android:name=".gray.LightActivity" />
     </application>
 
 </manifest>

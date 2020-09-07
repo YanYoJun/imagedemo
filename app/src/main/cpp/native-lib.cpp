@@ -358,6 +358,50 @@ Java_com_plbear_imagedemo_jinterface_CvInterface_child(
     return result;
 }
 
+//亮度对比度
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_light(JNIEnv *env, jobject thiz, jintArray pixels,
+                                                       jint width, jint height, jint light,
+                                                       jfloat ratio) {
+    jboolean isCopy = JNI_FALSE;
+    jint *buf = env->GetIntArrayElements(pixels,&isCopy);
+    if(buf == NULL) return 0;
+    Mat imgData(height,width,CV_8UC4,buf);
+    int nr = imgData.rows;
+    int channel = imgData.channels();
+    int nc = imgData.cols;
+    for (int i = 0; i < nr; ++i) {
+        auto rowData = imgData.ptr(i);
+        for (int j = 0; j < nc; ++j) {
+            auto curData = rowData + (j * channel);
+            auto blue = curData[0];
+            auto green = curData[1];
+            auto red = curData[2];
+            auto DBlue = ratio * blue + light;
+            if(DBlue > 255) DBlue = 255;
+            else if(DBlue < 0) DBlue = 0;
+
+            auto DGreen = ratio * green + light;
+            if(DGreen > 255) DGreen = 255;
+            else if(DGreen < 0) DGreen = 0;
+
+            auto DRed = ratio * red + light;
+            if(DRed > 255) DRed = 255;
+            else if(DRed < 0) DRed = 0;
+
+            curData[0] = (unsigned char)DBlue;
+            curData[1] = (unsigned char)DGreen;
+            curData[2] = (unsigned char)DRed;
+        }
+    }
+    int size = width * height;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
+    env->ReleaseIntArrayElements(pixels, buf, 0);
+    return result;
+}
+
 //方框滤波
 extern "C" JNIEXPORT jintArray JNICALL
 Java_com_plbear_imagedemo_jinterface_CvInterface_boxFilter(
@@ -444,7 +488,7 @@ Java_com_plbear_imagedemo_jinterface_CvInterface_bilBlur(JNIEnv *env, jobject th
     jint *buf = env->GetIntArrayElements(pixels, &isCopy);
     if (buf == NULL) return 0;
     Mat imgData(height, width, CV_8UC3, buf);
-    Mat outData(height, width,CV_8UC4);
+    Mat outData(height, width, CV_8UC4);
     bilateralFilter(imgData, outData, 10, 10 * 2, 10 / 2);
     int size = width * height;
     jintArray result = env->NewIntArray(size);
