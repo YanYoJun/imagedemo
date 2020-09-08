@@ -75,6 +75,41 @@
                 android:id="@+id/iv_bil"
                 android:layout_width="300dp"
                 android:layout_height="200dp" />
+
+
+            <TextView
+                android:id="@+id/tv_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="最大值滤波(膨胀)" />
+
+            <ImageView
+                android:id="@+id/iv_max"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+
+            <TextView
+                android:id="@+id/tv_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="最小值滤波(腐蚀)" />
+
+            <ImageView
+                android:id="@+id/iv_min"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+
+            <TextView
+                android:id="@+id/tv_fudiao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="浮雕" />
+
+            <ImageView
+                android:id="@+id/iv_fudiao"
+                android:layout_width="300dp"
+                android:layout_height="200dp" />
+
         </LinearLayout>
     </ScrollView>
 </layout>

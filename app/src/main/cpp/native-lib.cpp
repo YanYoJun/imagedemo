@@ -365,9 +365,9 @@ Java_com_plbear_imagedemo_jinterface_CvInterface_light(JNIEnv *env, jobject thiz
                                                        jint width, jint height, jint light,
                                                        jfloat ratio) {
     jboolean isCopy = JNI_FALSE;
-    jint *buf = env->GetIntArrayElements(pixels,&isCopy);
-    if(buf == NULL) return 0;
-    Mat imgData(height,width,CV_8UC4,buf);
+    jint *buf = env->GetIntArrayElements(pixels, &isCopy);
+    if (buf == NULL) return 0;
+    Mat imgData(height, width, CV_8UC4, buf);
     int nr = imgData.rows;
     int channel = imgData.channels();
     int nc = imgData.cols;
@@ -379,20 +379,20 @@ Java_com_plbear_imagedemo_jinterface_CvInterface_light(JNIEnv *env, jobject thiz
             auto green = curData[1];
             auto red = curData[2];
             auto DBlue = ratio * blue + light;
-            if(DBlue > 255) DBlue = 255;
-            else if(DBlue < 0) DBlue = 0;
+            if (DBlue > 255) DBlue = 255;
+            else if (DBlue < 0) DBlue = 0;
 
             auto DGreen = ratio * green + light;
-            if(DGreen > 255) DGreen = 255;
-            else if(DGreen < 0) DGreen = 0;
+            if (DGreen > 255) DGreen = 255;
+            else if (DGreen < 0) DGreen = 0;
 
             auto DRed = ratio * red + light;
-            if(DRed > 255) DRed = 255;
-            else if(DRed < 0) DRed = 0;
+            if (DRed > 255) DRed = 255;
+            else if (DRed < 0) DRed = 0;
 
-            curData[0] = (unsigned char)DBlue;
-            curData[1] = (unsigned char)DGreen;
-            curData[2] = (unsigned char)DRed;
+            curData[0] = (unsigned char) DBlue;
+            curData[1] = (unsigned char) DGreen;
+            curData[2] = (unsigned char) DRed;
         }
     }
     int size = width * height;
@@ -493,6 +493,61 @@ Java_com_plbear_imagedemo_jinterface_CvInterface_bilBlur(JNIEnv *env, jobject th
     int size = width * height;
     jintArray result = env->NewIntArray(size);
     env->SetIntArrayRegion(result, 0, size, (jint *) outData.data);
+    env->ReleaseIntArrayElements(pixels, buf, 0);
+    return result;
+}
+//最大值滤波
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_maxFilter(JNIEnv *env, jobject thiz,
+                                                           jintArray pixels, jint w, jint h) {
+    jboolean isCopy = JNI_FALSE;
+    jint *buf = env->GetIntArrayElements(pixels, &isCopy);
+    if (buf == NULL) return 0;
+    Mat imgData(h, w, CV_8UC4, buf);
+    //通过getStructuringElement获取卷积核, 卷积核可以是矩形, 十字架, 椭圆
+    dilate(imgData, imgData, getStructuringElement(MORPH_CROSS, Size(10, 10)));
+    int size = w * h;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
+    env->ReleaseIntArrayElements(pixels, buf, 0);
+    return result;
+}
+
+//最小值滤波
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_minFilter(JNIEnv *env, jobject thiz,
+                                                           jintArray pixels, jint width,
+                                                           jint height) {
+    jboolean isCopy = JNI_FALSE;
+    jint *buf = env->GetIntArrayElements(pixels, &isCopy);
+    if (buf == NULL) return 0;
+    Mat imgData(height, width, CV_8UC4, buf);
+    erode(imgData, imgData, getStructuringElement(MORPH_CROSS, Size(10, 10)));
+    int size = width * height;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
+    env->ReleaseIntArrayElements(pixels, buf, 0);
+    return result;
+}
+
+//自定义卷积核
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_plbear_imagedemo_jinterface_CvInterface_d2Filter(JNIEnv *env, jobject thiz,
+                                                          jintArray pixels, jint width,
+                                                          jint height) {
+    jboolean isCopy = JNI_FALSE;
+    jint *buf = env->GetIntArrayElements(pixels, &isCopy);
+    if (buf == NULL) return 0;
+
+    Mat kernel = (Mat_<char>(3, 3) << -2, -1, 0, -1, 1, 1, 0, 1, 2);
+    Mat imgData(height, width, CV_8UC4, buf);
+    filter2D(imgData, imgData, -1, kernel);
+    int size = height * width;
+    jintArray result = env->NewIntArray(size);
+    env->SetIntArrayRegion(result, 0, size, (jint *) imgData.data);
     env->ReleaseIntArrayElements(pixels, buf, 0);
     return result;
 }
